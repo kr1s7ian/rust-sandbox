@@ -3,23 +3,18 @@ extern crate sdl2;
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
-use sdl2::rect::{Point, Rect};
 use sdl2::render::WindowCanvas;
-use sdl2::sys::KeyCode;
-use sdl2::video::Window;
 use sdl2::Sdl;
-use std::time::Duration;
 
-use crate::particles::air::Air;
 use crate::particles::gravel::Gravel;
-use crate::particles::particle::ParticleKind;
+use crate::particles::particle::{ParticleBehaviour, Particle};
 use crate::particles::sand::Sand;
-use crate::particles::stone::Stone;
-use crate::utils::Vec2;
+use crate::particles::water::Water;
 
 use super::world::World;
 
-pub struct Game {
+pub struct Game
+{
     running: bool,
     sdl_ctx: Sdl,
     canvas: WindowCanvas,
@@ -27,7 +22,7 @@ pub struct Game {
     timer: f32,
 }
 
-impl Game {
+impl Game{
     pub fn new(width: u32, height: u32, cell_size: u32) -> Self {
         // Initializing sdl context
         let sdl_ctx = match sdl2::init() {
@@ -83,13 +78,9 @@ impl Game {
 
     pub fn start(&mut self) {
         self.running = true;
-        let y = self.world.dimensions().y-10;
-        for x in 1..self.world.dimensions().x {
-            self.world.set_particle(ParticleKind::Stone(Stone::new(x, y)));
-        }
 
-        self.world.set_particle(ParticleKind::Sand(Sand::new(73, 4)));
-        self.world.set_particle(ParticleKind::Sand(Sand::new(73, 11)));
+        //self.world.set_particle(Particle::<Air>::new(10,10));
+        //self.world.set_particle(Particle::new(1, 1, Box::new(Sand{})));
     }
 
     pub fn poll_events(&mut self) {
@@ -104,7 +95,7 @@ impl Game {
                 Event::KeyDown {
                     keycode: Some(Keycode::Space),
                     ..
-                } => {self.update()},
+                } => {self.world.tick()},
                 _ => {},
             }
         }
@@ -115,20 +106,21 @@ impl Game {
         self.world.tick();
         self.timer += 0.1;
 
-       if self.timer > 0.3 {
-           self.timer = 0.0;
-           self.world.set_particle(ParticleKind::Sand(Sand::new(39, 20)));
-           self.world.set_particle(ParticleKind::Sand(Sand::new(73, 4)));
-           self.world.set_particle(ParticleKind::Gravel(Gravel::new(75, 4)));
-           self.world.set_particle(ParticleKind::Gravel(Gravel::new(85, 4)));
+        if self.timer > 0.1 {
+            self.timer = 0.0;
+            self.world.set_particle(Particle::new(50, 1, Box::new(Sand{})));
+            self.world.set_particle(Particle::new(20, 1, Box::new(Sand{})));
+            self.world.set_particle(Particle::new(10, 1, Box::new(Gravel{})));
+            self.world.set_particle(Particle::new(100, 1, Box::new(Water{})));
+            self.world.set_particle(Particle::new(80, 1, Box::new(Sand{})));
         }
     }
 
     pub fn draw (&mut self) {
         self.canvas.set_draw_color(Color::BLACK);
-        self.canvas.clear();
         self.world.draw(&mut self.canvas);
         self.canvas.present();
+        self.canvas.clear();
     }
 
     pub fn running(&self) -> bool {

@@ -1,3 +1,4 @@
+
 use std::time::Duration;
 
 use crate::{
@@ -10,9 +11,9 @@ use sdl2::pixels::Color;
 use super::particle::{Particle, ParticleBehaviour};
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
-pub struct Sand {}
+pub struct Water {}
 
-impl ParticleBehaviour for Sand {
+impl ParticleBehaviour for Water {
     fn tick(
         &self,
         particle: &Particle,
@@ -20,23 +21,22 @@ impl ParticleBehaviour for Sand {
     ) -> Option<(Particle, Particle)> {
         let mut pos = particle.position();
 
-        if neighbors.bottom.is_some()
-            && neighbors.bottom.unwrap().behaviour().color() == Color::CYAN
+        if neighbors.middle_right.is_some()
+            && neighbors.middle_right.unwrap().behaviour().color() == Color::CYAN
         {
-            pos.y += 1;
-            let new_state = Particle::new(pos.x, pos.y, Box::new(Sand{}));
+            pos.x += 1;
+            let new_state = Particle::new(pos.x, pos.y, Box::new(Water{}));
             let old_state = Particle::new(particle.position().x, particle.position().y, Box::new(Air{}));
             return Some((new_state, old_state))
-        } else if neighbors.bottom_left.is_some()
-            && neighbors.bottom_left.unwrap().color() == Color::CYAN
+        } else if neighbors.middle_left.is_some()
+            && neighbors.middle_left.unwrap().color() == Color::CYAN
         {
-            pos.y += 1;
             pos.x -= 1;
-            let new_state = Particle::new(pos.x, pos.y, Box::new(Sand{}));
+            let new_state = Particle::new(pos.x, pos.y, Box::new(Water{}));
             let old_state = Particle::new(particle.position().x, particle.position().y, Box::new(Air{}));
             return Some((new_state, old_state))
-        } else if neighbors.bottom_right.is_some()
-            && neighbors.bottom_right.unwrap().color() == Color::CYAN
+        } else if neighbors.top.is_some()
+            && neighbors.top.unwrap().color() == Color::CYAN
         {
             pos.y += 1;
             pos.x += 1;

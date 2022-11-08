@@ -1,48 +1,53 @@
-use std::iter::Inspect;
+use std::marker::{PhantomData, self};
 
-use crate::utils::{Vec2, MooreNeighborhood};
-use crate::world::World;
-
-use super::gravel::Gravel;
-use super::sand::Sand;
-use super::air::Air;
-use super::stone::Stone;
+use crate::{utils::{Vec2, MooreNeighborhood}, world::World};
 use sdl2::pixels::Color;
 
+use super::air::Air;
 
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
-pub enum ParticleKind{
-    Air(Air),
-    Sand(Sand),
-    Gravel(Gravel),
-    Stone(Stone),
+type Behaviour = Box<dyn ParticleBehaviour>;
+
+pub struct Particle
+{
+    position: Vec2<u32>,
+    behaviour: Behaviour
 }
 
-impl ParticleKind {
-    pub fn instance(&self) -> &dyn ParticleBehaviour {
-        match self {
-            ParticleKind::Air(instance) => instance,
-            ParticleKind::Sand(instance) => instance,
-            ParticleKind::Gravel(instance) => instance,
-            ParticleKind::Stone(instance) => instance,
+impl Particle
+{
+    pub fn new(x: u32, y: u32, behaviour: Behaviour) -> Self {
+        Self {
+            position: Vec2 {x, y},
+            behaviour
         }
     }
-    pub fn instance_mut(&mut self) -> &mut dyn ParticleBehaviour {
-        match self {
-            ParticleKind::Air(instance) => instance,
-            ParticleKind::Sand(instance) => instance,
-            ParticleKind::Gravel(instance) => instance,
-            ParticleKind::Stone(instance) => instance,
-        }
+
+    pub fn position(&self) -> Vec2<u32> {
+        self.position
+    }
+
+    pub fn position_mut(&mut self) -> &mut Vec2<u32> {
+        &mut self.position
+    }
+
+    pub fn mutate(&mut self, behaviour: Behaviour) {
+        self.behaviour = behaviour
+    }
+
+    pub fn behaviour(&self) -> &Behaviour {
+        &self.behaviour
+    }
+
+    pub fn color(&self) -> Color {
+        self.behaviour.color()
+    }
+
+    pub fn tick(&self, neighbors: MooreNeighborhood) -> Option<(Particle, Particle)> {
+        self.behaviour.tick(self, neighbors)
     }
 }
 
 pub trait ParticleBehaviour {
-    fn kind(&self) -> ParticleKind;
-    fn position(&self) -> Vec2<u32>;
-    fn position_mut(&mut self) -> &mut Vec2<u32>;
     fn color(&self) -> Color;
-    fn tick(&mut self, neighbors: &MooreNeighborhood) -> Option<Vec2<u32>>;
-    fn is_solid(&self) -> bool;
-    fn is_solid_mut(&mut self) -> &mut bool;
+    fn tick(&self, particle: &Particle, neighbors: MooreNeighborhood) -> Option<(Particle, Particle)>;
 }

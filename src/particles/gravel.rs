@@ -1,55 +1,38 @@
-use crate::{utils::{Vec2, MooreNeighborhood}, world::World};
+
+use std::time::Duration;
+
+use crate::{
+    particles::air::Air,
+    utils::{MooreNeighborhood, Vec2},
+    world::World,
+};
 use sdl2::pixels::Color;
 
-use super::{particle::{ParticleBehaviour, ParticleKind}, air::Air};
+use super::particle::{Particle, ParticleBehaviour};
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
-pub struct Gravel {
-    position: Vec2<u32>,
-    is_solid: bool,
-}
+pub struct Gravel {}
 
-impl Gravel {
-    pub fn new(x: u32, y: u32) -> Self {
-        Self {
-            position: Vec2 { x, y },
-            is_solid: false,
-        }
-    }
-}
 impl ParticleBehaviour for Gravel {
-    fn color(&self) -> Color {
-        Color::RGB(80, 80, 80)
-    }
+    fn tick(
+        &self,
+        particle: &Particle,
+        neighbors: MooreNeighborhood,
+    ) -> Option<(Particle, Particle)> {
+        let mut pos = particle.position();
 
-    fn position(&self) -> Vec2<u32> {
-        self.position
-    }
-
-    fn position_mut(&mut self) -> &mut Vec2<u32> {
-        &mut self.position
-    }
-
-    fn tick(&mut self, neighbors: &MooreNeighborhood) -> Option<Vec2<u32>> {
-        let mut pos = self.position;
-
-        if neighbors.bottom.is_some() && *neighbors.bottom.unwrap() == ParticleKind::Air(Air::new(pos.x, pos.y+1)) {
+        if neighbors.bottom.is_some()
+            && neighbors.bottom.unwrap().behaviour().color() == Color::CYAN
+        {
             pos.y += 1;
-            return Some(pos);
+            let new_state = Particle::new(pos.x, pos.y, Box::new(Gravel{}));
+            let old_state = Particle::new(particle.position().x, particle.position().y, Box::new(Air{}));
+            return Some((new_state, old_state))
         }
-
         None
     }
 
-    fn is_solid(&self) -> bool {
-        self.is_solid
-    }
-
-    fn is_solid_mut(&mut self) -> &mut bool {
-        &mut self.is_solid
-    }
-
-    fn kind(&self) -> ParticleKind {
-        ParticleKind::Gravel(self.clone())
+    fn color(&self) -> Color {
+        Color::GRAY
     }
 }

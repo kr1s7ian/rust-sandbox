@@ -5,9 +5,10 @@ mod utils;
 use std::time::Duration;
 
 use game::Game;
+use particles::{particle::ParticleBehaviour, air::Air};
 
 pub fn main() {
-    let mut game = Game::new(1280, 720, 8);
+    let mut game: Game = Game::new(1280, 720, 4);
     game.start();
 
     while game.running() {
