@@ -1,4 +1,4 @@
-use crate::particles::particle::ParticleKind;
+use crate::particles::particle::Particle;
 
 
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]
@@ -8,12 +8,13 @@ pub struct Vec2<T>{
 }
 
 pub struct MooreNeighborhood<'a> {
-    pub top_left: Option<&'a ParticleKind>,
-    pub top: Option<&'a ParticleKind>,
-    pub top_right: Option<&'a ParticleKind>,
-    pub middle_left: Option<&'a ParticleKind>,
-    pub middle_right: Option<&'a ParticleKind>,
-    pub bottom_left: Option<&'a ParticleKind>,
-    pub bottom: Option<&'a ParticleKind>,
-    pub bottom_right: Option<&'a ParticleKind>,
+    pub top_left: Option<&'a Particle>,
+    pub top: Option<&'a Particle>,
+    pub top_right: Option<&'a Particle>,
+    pub middle_left: Option<&'a Particle>,
+    pub middle: Option<&'a Particle>,
+    pub middle_right: Option<&'a Particle>,
+    pub bottom_left: Option<&'a Particle>,
+    pub bottom: Option<&'a Particle>,
+    pub bottom_right: Option<&'a Particle>,
 }

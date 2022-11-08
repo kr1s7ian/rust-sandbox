@@ -7,7 +7,7 @@ use std::time::Duration;
 use game::Game;
 
 pub fn main() {
-    let mut game = Game::new(1280, 720, 8);
+    let mut game = Game::new(1280, 720, 10);
     game.start();
 
     while game.running() {

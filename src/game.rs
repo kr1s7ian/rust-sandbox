@@ -10,11 +10,7 @@ use sdl2::video::Window;
 use sdl2::Sdl;
 use std::time::Duration;
 
-use crate::particles::air::Air;
-use crate::particles::gravel::Gravel;
-use crate::particles::particle::ParticleKind;
-use crate::particles::sand::Sand;
-use crate::particles::stone::Stone;
+use crate::particles::particle::Particle;
 use crate::utils::Vec2;
 
 use super::world::World;
@@ -83,13 +79,14 @@ impl Game {
 
     pub fn start(&mut self) {
         self.running = true;
+        self.world.set_particle(Particle::new(10, 10, crate::particles::particle::ParticleKind::Gravel));
         let y = self.world.dimensions().y-10;
         for x in 1..self.world.dimensions().x {
-            self.world.set_particle(ParticleKind::Stone(Stone::new(x, y)));
+            //self.world.set_particle(ParticleKind::Stone(Stone::new(x, y)));
         }
 
-        self.world.set_particle(ParticleKind::Sand(Sand::new(73, 4)));
-        self.world.set_particle(ParticleKind::Sand(Sand::new(73, 11)));
+        //self.world.set_particle(ParticleKind::Sand(Sand::new(73, 4)));
+        //self.world.set_particle(ParticleKind::Sand(Sand::new(73, 11)));
     }
 
     pub fn poll_events(&mut self) {
@@ -117,10 +114,10 @@ impl Game {
 
        if self.timer > 0.3 {
            self.timer = 0.0;
-           self.world.set_particle(ParticleKind::Sand(Sand::new(39, 20)));
-           self.world.set_particle(ParticleKind::Sand(Sand::new(73, 4)));
-           self.world.set_particle(ParticleKind::Gravel(Gravel::new(75, 4)));
-           self.world.set_particle(ParticleKind::Gravel(Gravel::new(85, 4)));
+           self.world.set_particle(Particle::new(15, 15, crate::particles::particle::ParticleKind::Gravel));
+           //self.world.set_particle(ParticleKind::Sand(Sand::new(73, 4)));
+           //self.world.set_particle(ParticleKind::Gravel(Gravel::new(75, 4)));
+           //self.world.set_particle(ParticleKind::Gravel(Gravel::new(85, 4)));
         }
     }
 
