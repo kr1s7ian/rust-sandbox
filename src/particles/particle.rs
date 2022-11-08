@@ -12,29 +12,15 @@ use sdl2::pixels::Color;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum ParticleKind{
-    Air(Air),
-    Sand(Sand),
-    Gravel(Gravel),
-    Stone(Stone),
+    Air,
 }
 
 impl ParticleKind {
-    pub fn instance(&self) -> &dyn ParticleBehaviour {
-        match self {
-            ParticleKind::Air(instance) => instance,
-            ParticleKind::Sand(instance) => instance,
-            ParticleKind::Gravel(instance) => instance,
-            ParticleKind::Stone(instance) => instance,
-        }
+    fn tick(&self) {
+
     }
-    pub fn instance_mut(&mut self) -> &mut dyn ParticleBehaviour {
-        match self {
-            ParticleKind::Air(instance) => instance,
-            ParticleKind::Sand(instance) => instance,
-            ParticleKind::Gravel(instance) => instance,
-            ParticleKind::Stone(instance) => instance,
-        }
-    }
+
+    fn color(&self)
 }
 
 pub trait ParticleBehaviour {

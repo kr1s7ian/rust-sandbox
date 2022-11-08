@@ -1,0 +1,12 @@
+/home/kri/code/rust/sdl2-test/target/debug/deps/version_compare-c7e4e856f18c3e12.rmeta: /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/lib.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/cmp.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/compare.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/manifest.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/part.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/version.rs
+
+/home/kri/code/rust/sdl2-test/target/debug/deps/libversion_compare-c7e4e856f18c3e12.rlib: /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/lib.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/cmp.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/compare.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/manifest.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/part.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/version.rs
+
+/home/kri/code/rust/sdl2-test/target/debug/deps/version_compare-c7e4e856f18c3e12.d: /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/lib.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/cmp.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/compare.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/manifest.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/part.rs /home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/version.rs
+
+/home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/lib.rs:
+/home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/cmp.rs:
+/home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/compare.rs:
+/home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/manifest.rs:
+/home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/part.rs:
+/home/kri/.cargo/registry/src/github.com-1ecc6299db9ec823/version-compare-0.1.0/src/version.rs:
