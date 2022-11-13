@@ -1,4 +1,4 @@
-use crate::particles::particle::Particle;
+use crate::particle::Particle;
 
 
 #[derive(Debug, Copy, Clone, PartialEq, PartialOrd)]

@@ -10,7 +10,7 @@ use sdl2::video::Window;
 use sdl2::Sdl;
 use std::time::Duration;
 
-use crate::particles::particle::Particle;
+use crate::particle::Particle;
 use crate::utils::Vec2;
 
 use super::world::World;
@@ -79,10 +79,9 @@ impl Game {
 
     pub fn start(&mut self) {
         self.running = true;
-        self.world.set_particle(Particle::new(10, 10, crate::particles::particle::ParticleKind::Gravel));
         let y = self.world.dimensions().y-10;
-        for x in 1..self.world.dimensions().x {
-            //self.world.set_particle(ParticleKind::Stone(Stone::new(x, y)));
+        for x in 1..self.world.dimensions().x-1 {
+            self.world.set_particle(Particle::new(x, y, crate::particle::ParticleKind::Gravel(false)));
         }
 
         //self.world.set_particle(ParticleKind::Sand(Sand::new(73, 4)));
@@ -98,10 +97,18 @@ impl Game {
                     keycode: Some(Keycode::Escape),
                     ..
                 } => self.running = false,
-                Event::KeyDown {
-                    keycode: Some(Keycode::Space),
-                    ..
-                } => {self.update()},
+                Event::KeyDown { keycode: Some(Keycode::D), .. } => {
+                    self.world.translate(-5.0,0.0);
+                },
+                Event::KeyDown { keycode: Some(Keycode::A), .. } => {
+                    self.world.translate(5.0,0.0);
+                },
+                Event::KeyDown { keycode: Some(Keycode::W), .. } => {
+                    self.world.translate(0.0,5.0);
+                },
+                Event::KeyDown { keycode: Some(Keycode::S), .. } => {
+                    self.world.translate(0.0,-5.0);
+                },
                 _ => {},
             }
         }
@@ -114,10 +121,13 @@ impl Game {
 
        if self.timer > 0.3 {
            self.timer = 0.0;
-           self.world.set_particle(Particle::new(15, 15, crate::particles::particle::ParticleKind::Gravel));
-           //self.world.set_particle(ParticleKind::Sand(Sand::new(73, 4)));
-           //self.world.set_particle(ParticleKind::Gravel(Gravel::new(75, 4)));
-           //self.world.set_particle(ParticleKind::Gravel(Gravel::new(85, 4)));
+           self.world.set_particle(Particle::new(15, 50, crate::particle::ParticleKind::Gravel(true)));
+           self.world.set_particle(Particle::new(20, 50, crate::particle::ParticleKind::Gravel(false)));
+           self.world.set_particle(Particle::new(25, 25, crate::particle::ParticleKind::Sand(false)));
+           self.world.set_particle(Particle::new(22, 25, crate::particle::ParticleKind::Sand(false)));
+           self.world.set_particle(Particle::new(18, 25, crate::particle::ParticleKind::Sand(false)));
+           self.world.set_particle(Particle::new(25, 50, crate::particle::ParticleKind::Sand(true)));
+           self.world.set_particle(Particle::new(18, 20, crate::particle::ParticleKind::Sand(false)));
         }
     }
 
