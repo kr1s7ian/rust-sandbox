@@ -84,13 +84,13 @@ impl Game {
             self.world.set_particle(Particle::new(x, y, crate::particle::ParticleKind::Gravel(false)));
         }
 
+
         //self.world.set_particle(ParticleKind::Sand(Sand::new(73, 4)));
         //self.world.set_particle(ParticleKind::Sand(Sand::new(73, 11)));
     }
 
     pub fn poll_events(&mut self) {
         let mut events = self.sdl_ctx.event_pump().unwrap();
-
         for event in events.poll_iter() {
             match event {
                 Event::Quit { .. } | Event::KeyDown{
@@ -98,18 +98,36 @@ impl Game {
                     ..
                 } => self.running = false,
                 Event::KeyDown { keycode: Some(Keycode::D), .. } => {
-                    self.world.translate(-5.0,0.0);
+                    self.world.translate(-1.0,0.0);
                 },
                 Event::KeyDown { keycode: Some(Keycode::A), .. } => {
-                    self.world.translate(5.0,0.0);
+                    self.world.translate(1.0,0.0);
                 },
                 Event::KeyDown { keycode: Some(Keycode::W), .. } => {
-                    self.world.translate(0.0,5.0);
+                    self.world.translate(0.0,1.0);
                 },
                 Event::KeyDown { keycode: Some(Keycode::S), .. } => {
-                    self.world.translate(0.0,-5.0);
+                    self.world.translate(0.0,-1.0);
                 },
                 _ => {},
+            }
+        }
+
+        let state = events.mouse_state();
+        let mut solid = false;
+        if state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Left) {
+            solid = true;
+        }
+        else if state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Right) {
+            solid = false;
+        }
+
+        if state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Left) || state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Right) {
+            let coord = self.world.window_to_world_coordinate(state.x() ,state.y());
+            if coord.is_some() {
+                let coord = coord.unwrap();
+                self.world.set_particle(Particle::new(coord.x as u32, coord.y as u32, crate::particle::ParticleKind::Sand(solid)));
+                println!("mouseX: {}, mouseY{}", state.x(), state.y());
             }
         }
     }
