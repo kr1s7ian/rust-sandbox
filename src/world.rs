@@ -1,4 +1,5 @@
 use sdl2::pixels::Color;
+
 use sdl2::{
     rect::Rect,
     render::WindowCanvas,
@@ -20,8 +21,8 @@ pub struct World {
 
 impl World {
     pub fn new(width: u32, height: u32, cell_size: u32) -> Self {
-        let wdith = width * 25;
-        let height = height * 25;
+        let width = width * 1;
+        let height = height * 1;
         let length = width * height;
 
         let content: Vec<Particle> = vec![Particle::new(0, 0, Air(false)); length as usize];
@@ -83,18 +84,35 @@ impl World {
         self.dimensions
     }
 
+    pub fn offset(&self) -> Vec2<f32> {
+        self.offset
+    }
+
+    pub fn window_to_world_coordinate(&self, x: i32, y: i32) -> Option<Vec2<i32>>{
+        let x = (x / self.cell_size as i32) - self.offset.x as i32;
+        let y = (y / self.cell_size as i32) - self.offset.y as i32;
+        if (x > 0 && x < self.dimensions.x as i32) && (y > 0 && y < self.dimensions.y as i32) {
+           return Some(Vec2{x, y})
+        }
+
+        None
+    }
+
     pub fn draw(&self, canvas: &mut WindowCanvas) {
-        for x in 0..self.dimensions.x {
-            for y in 0..self.dimensions.y {
+        for x in 1..self.dimensions.x-1 {
+            for y in 1..self.dimensions.y {
                 let particle = self.particle_at(x, y);
-                if particle.is_none() {
+                if particle.is_none(){
                     return;
                 }
                 let particle = particle.unwrap();
-
+                let x = (x as f32 + self.offset.x as f32) * self.cell_size as f32;
+                let y = (y as f32 + self.offset.y as f32) * self.cell_size as f32;
+                let (win_width, win_height) = canvas.window().size();
+                if x as u32 > win_width && y as u32 > win_height {
+                    return;
+                }
                 canvas.set_draw_color(particle.color());
-                let x = self.offset.x + (x as u32 * self.cell_size) as f32;
-                let y = self.offset.y + (y as u32 * self.cell_size) as f32;
                 let size = self.cell_size as u32;
 
                 let rect = Rect::new(x as i32, y as i32, size, size);
