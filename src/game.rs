@@ -10,7 +10,8 @@ use sdl2::video::Window;
 use sdl2::Sdl;
 use std::time::Duration;
 
-use crate::particle::Particle;
+use crate::particle::{Particle, ParticleKind};
+use crate::particles::sand::Sand;
 use crate::utils::Vec2;
 
 use super::world::World;
@@ -57,59 +58,62 @@ impl Game {
         };
 
         let canvas = match window.into_canvas().build() {
-            Ok(value) => {
-                value
-            },
+            Ok(value) => value,
             Err(e) => {
                 eprintln!("Error constructing canvas : {:?},", e);
                 std::process::exit(-1);
             }
         };
 
-        let world = World::new(width/cell_size, height/cell_size, cell_size);
+        let world = World::new(width / cell_size, height / cell_size, cell_size);
 
         Self {
             running: false,
             sdl_ctx,
             canvas,
             world,
-            timer: 0.0
+            timer: 0.0,
         }
     }
 
     pub fn start(&mut self) {
         self.running = true;
-        let y = self.world.dimensions().y-10;
-        for x in 1..self.world.dimensions().x-1 {
-            self.world.set_particle(Particle::new(x, y, crate::particle::ParticleKind::Gravel(false)));
-        }
-
-
-        //self.world.set_particle(ParticleKind::Sand(Sand::new(73, 4)));
-        //self.world.set_particle(ParticleKind::Sand(Sand::new(73, 11)));
     }
 
     pub fn poll_events(&mut self) {
         let mut events = self.sdl_ctx.event_pump().unwrap();
         for event in events.poll_iter() {
             match event {
-                Event::Quit { .. } | Event::KeyDown{
+                Event::Quit { .. }
+                | Event::KeyDown {
                     keycode: Some(Keycode::Escape),
                     ..
                 } => self.running = false,
-                Event::KeyDown { keycode: Some(Keycode::D), .. } => {
-                    self.world.translate(-1.0,0.0);
-                },
-                Event::KeyDown { keycode: Some(Keycode::A), .. } => {
-                    self.world.translate(1.0,0.0);
-                },
-                Event::KeyDown { keycode: Some(Keycode::W), .. } => {
-                    self.world.translate(0.0,1.0);
-                },
-                Event::KeyDown { keycode: Some(Keycode::S), .. } => {
-                    self.world.translate(0.0,-1.0);
-                },
-                _ => {},
+                Event::KeyDown {
+                    keycode: Some(Keycode::D),
+                    ..
+                } => {
+                    self.world.translate(-1.0, 0.0);
+                }
+                Event::KeyDown {
+                    keycode: Some(Keycode::A),
+                    ..
+                } => {
+                    self.world.translate(1.0, 0.0);
+                }
+                Event::KeyDown {
+                    keycode: Some(Keycode::W),
+                    ..
+                } => {
+                    self.world.translate(0.0, 1.0);
+                }
+                Event::KeyDown {
+                    keycode: Some(Keycode::S),
+                    ..
+                } => {
+                    self.world.translate(0.0, -1.0);
+                }
+                _ => {}
             }
         }
 
@@ -117,39 +121,45 @@ impl Game {
         let mut solid = false;
         if state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Left) {
             solid = true;
-        }
-        else if state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Right) {
+        } else if state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Right) {
             solid = false;
         }
 
-        if state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Left) || state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Right) {
-            let coord = self.world.window_to_world_coordinate(state.x() ,state.y());
+        if state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Left)
+            || state.is_mouse_button_pressed(sdl2::mouse::MouseButton::Right)
+        {
+            let coord = self.world.window_to_world_coordinate(state.x(), state.y());
             if coord.is_some() {
                 let coord = coord.unwrap();
-                self.world.set_particle(Particle::new(coord.x as u32, coord.y as u32, crate::particle::ParticleKind::Sand(solid)));
+                for x in 0..2 {
+                    for y in 0..2 {
+                        println!("{}", self.timer);
+                        if self.timer > 0.2 {
+                            self.world.set_particle(Particle::new::<Sand>(
+                                coord.x as u32 + x,
+                                coord.y as u32 + y,
+                                solid
+                            ));
+                        }
+                    }
+                }
                 println!("mouseX: {}, mouseY{}", state.x(), state.y());
             }
         }
     }
 
-    pub fn update (&mut self) {
+    pub fn update(&mut self) {
         //println!("updating");
         self.world.tick();
         self.timer += 0.1;
 
-       if self.timer > 0.3 {
-           self.timer = 0.0;
-           self.world.set_particle(Particle::new(15, 50, crate::particle::ParticleKind::Gravel(true)));
-           self.world.set_particle(Particle::new(20, 50, crate::particle::ParticleKind::Gravel(false)));
-           self.world.set_particle(Particle::new(25, 25, crate::particle::ParticleKind::Sand(false)));
-           self.world.set_particle(Particle::new(22, 25, crate::particle::ParticleKind::Sand(false)));
-           self.world.set_particle(Particle::new(18, 25, crate::particle::ParticleKind::Sand(false)));
-           self.world.set_particle(Particle::new(25, 50, crate::particle::ParticleKind::Sand(true)));
-           self.world.set_particle(Particle::new(18, 20, crate::particle::ParticleKind::Sand(false)));
+        if self.timer > 0.3 {
+            self.timer = 0.0;
+            self.world.set_particle(Particle::new::<Sand>(10,10, false));
         }
     }
 
-    pub fn draw (&mut self) {
+    pub fn draw(&mut self) {
         self.canvas.set_draw_color(Color::BLACK);
         self.canvas.clear();
         self.world.draw(&mut self.canvas);

@@ -5,9 +5,10 @@ use sdl2::{
     render::WindowCanvas,
 };
 
+use crate::particles::air::Air;
+use crate::particles::sand::Sand;
 use crate::{
     particle::Particle,
-    particle::ParticleKind::Air,
     utils::{MooreNeighborhood, Vec2},
 };
 
@@ -25,7 +26,7 @@ impl World {
         let height = height * 1;
         let length = width * height;
 
-        let content: Vec<Particle> = vec![Particle::new(0, 0, Air(false)); length as usize];
+        let content: Vec<Particle> = vec![Particle::new::<Air>(0, 0, false); length as usize];
         let mut result = Self {
             dimensions: Vec2 {
                 x: width,
@@ -38,7 +39,7 @@ impl World {
 
         for x in 0..result.dimensions.x {
             for y in 0..result.dimensions.y {
-                result.set_particle(Particle::new(x, y, Air(false)));
+                result.set_particle(Particle::new::<Air>(x, y, false));
             }
         }
 
